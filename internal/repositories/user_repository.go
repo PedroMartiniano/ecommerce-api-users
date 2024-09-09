@@ -56,15 +56,18 @@ func (u *userRepository) Create(c context.Context, user models.User) (models.Use
 
 func (u *userRepository) GetByID(c context.Context, userID string) (models.User, error) {
 	query := `
-		SELECT id, role_id, email, password, name, phone, cpf, birth_date, status, created_at
+		SELECT id, role_id, address_id, email, password, name, phone, cpf, birth_date, status, created_at
 		FROM users
 		WHERE id = $1;
 	`
 
 	var user models.User
+	var addrID sql.NullString
+
 	err := configs.DB.QueryRowContext(c, query, userID).Scan(
 		&user.ID,
 		&user.RoleID,
+		&addrID,
 		&user.Email,
 		&user.Password,
 		&user.Name,
@@ -81,12 +84,16 @@ func (u *userRepository) GetByID(c context.Context, userID string) (models.User,
 		return models.User{}, configs.NewError(configs.ErrInternalServer, err)
 	}
 
+	if addrID.Valid {
+		user.AddrID = addrID.String
+	}
+
 	return user, nil
 }
 
 func (u *userRepository) List(c context.Context) ([]models.User, error) {
 	query := `
-		SELECT id, role_id, email, password, name, phone, cpf, birth_date, status, created_at
+		SELECT id, role_id, address_id, email, password, name, phone, cpf, birth_date, status, created_at
 		FROM users;
 	`
 
@@ -100,10 +107,12 @@ func (u *userRepository) List(c context.Context) ([]models.User, error) {
 
 	for rows.Next() {
 		var user models.User
+		var addrID sql.NullString
 
 		err := rows.Scan(
 			&user.ID,
 			&user.RoleID,
+			&addrID,
 			&user.Email,
 			&user.Password,
 			&user.Name,
@@ -117,6 +126,10 @@ func (u *userRepository) List(c context.Context) ([]models.User, error) {
 			return []models.User{}, configs.NewError(configs.ErrInternalServer, err)
 		}
 
+		if addrID.Valid {
+			user.AddrID = addrID.String
+		}
+
 		users = append(users, user)
 	}
 
@@ -125,15 +138,17 @@ func (u *userRepository) List(c context.Context) ([]models.User, error) {
 
 func (u *userRepository) GetByEmail(c context.Context, email string) (models.User, error) {
 	query := `
-		SELECT id, role_id, email, password, name, phone, cpf, birth_date, status, created_at
+		SELECT id, role_id, address_id, email, password, name, phone, cpf, birth_date, status, created_at
 		FROM users
 		WHERE email = $1;
 	`
 	var user models.User
+	var addrID sql.NullString
 
 	err := configs.DB.QueryRowContext(c, query, email).Scan(
 		&user.ID,
 		&user.RoleID,
+		&addrID,
 		&user.Email,
 		&user.Password,
 		&user.Name,
@@ -148,6 +163,10 @@ func (u *userRepository) GetByEmail(c context.Context, email string) (models.Use
 			return models.User{}, configs.NewError(configs.ErrNotFound, err)
 		}
 		return models.User{}, configs.NewError(configs.ErrInternalServer, err)
+	}
+
+	if addrID.Valid {
+		user.AddrID = addrID.String
 	}
 
 	return user, nil
