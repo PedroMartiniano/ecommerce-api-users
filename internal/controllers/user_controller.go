@@ -2,17 +2,17 @@ package controllers
 
 import (
 	"github.com/PedroMartiniano/ecommerce-api-users/internal/models"
-	"github.com/PedroMartiniano/ecommerce-api-users/internal/ports/services"
+	ps "github.com/PedroMartiniano/ecommerce-api-users/internal/ports/iservices"
 	"github.com/PedroMartiniano/ecommerce-api-users/internal/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type userController struct {
-	userService services.IUserService
+	userService ps.IUserService
 }
 
-func NewUserController(userService services.IUserService) *userController {
+func NewUserController(userService ps.IUserService) *userController {
 	return &userController{
 		userService: userService,
 	}
@@ -98,6 +98,7 @@ func (u *userController) AuthUserHandler(c *gin.Context) {
 	token, err := utils.GenerateJWT(user.ID)
 	if err != nil {
 		sendError(c, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	sendSuccess(c, http.StatusOK, token)

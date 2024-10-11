@@ -1,4 +1,4 @@
-package repositories
+package irepositories
 
 import (
 	"context"

@@ -9,7 +9,7 @@ import (
 func InitMigrations() error {
 	migrationsPath := GetEnv("MIGRATIONS_PATH")
 	dbUrl := GetEnv("DATABASE_URL")
-	
+
 	m, err := migrate.New(
 		migrationsPath,
 		dbUrl,
@@ -19,7 +19,7 @@ func InitMigrations() error {
 	}
 
 	err = m.Up()
-	if err != nil {
+	if err != nil && err != migrate.ErrNoChange {
 		return err
 	}
 

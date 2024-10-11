@@ -10,6 +10,7 @@ func VerifyJWT(c *gin.Context) {
 	userID, err := utils.VerifyJWT(c.Request.Header.Get("Authorization"))
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"success": false, "message": err.Error()})
+		c.Abort()
 		return
 	}
 

@@ -3,15 +3,15 @@ package services
 import (
 	"context"
 	"github.com/PedroMartiniano/ecommerce-api-users/internal/models"
-	"github.com/PedroMartiniano/ecommerce-api-users/internal/ports/repositories"
-	"github.com/PedroMartiniano/ecommerce-api-users/internal/ports/services"
+	pr "github.com/PedroMartiniano/ecommerce-api-users/internal/ports/irepositories"
+	ps "github.com/PedroMartiniano/ecommerce-api-users/internal/ports/iservices"
 )
 
 type userService struct {
-	userRepository repositories.IUserRepository
+	userRepository pr.IUserRepository
 }
 
-func NewUserService(userRepository repositories.IUserRepository) services.IUserService {
+func NewUserService(userRepository pr.IUserRepository) ps.IUserService {
 	return &userService{
 		userRepository: userRepository,
 	}

@@ -4,19 +4,24 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/PedroMartiniano/ecommerce-api-users/internal/utils"
 	"time"
+
+	"github.com/PedroMartiniano/ecommerce-api-users/internal/utils"
 
 	"github.com/PedroMartiniano/ecommerce-api-users/internal/configs"
 	"github.com/PedroMartiniano/ecommerce-api-users/internal/models"
-	pr "github.com/PedroMartiniano/ecommerce-api-users/internal/ports/repositories"
+	pr "github.com/PedroMartiniano/ecommerce-api-users/internal/ports/irepositories"
 	"github.com/google/uuid"
 )
 
-type userRepository struct{}
+type userRepository struct {
+	db *sql.DB
+}
 
-func NewUseRepository() pr.IUserRepository {
-	return &userRepository{}
+func NewUserRepository(db *sql.DB) pr.IUserRepository {
+	return &userRepository{
+		db: db,
+	}
 }
 
 func (u *userRepository) Create(c context.Context, user models.User) (models.User, error) {
@@ -33,7 +38,7 @@ func (u *userRepository) Create(c context.Context, user models.User) (models.Use
 	if err != nil {
 		return models.User{}, configs.NewError(configs.ErrInternalServer, err)
 	}
-	_, err = configs.DB.ExecContext(
+	_, err = u.db.ExecContext(
 		c,
 		query,
 		user.ID,
@@ -64,7 +69,7 @@ func (u *userRepository) GetByID(c context.Context, userID string) (models.User,
 	var user models.User
 	var addrID sql.NullString
 
-	err := configs.DB.QueryRowContext(c, query, userID).Scan(
+	err := u.db.QueryRowContext(c, query, userID).Scan(
 		&user.ID,
 		&user.RoleID,
 		&addrID,
@@ -97,7 +102,7 @@ func (u *userRepository) List(c context.Context) ([]models.User, error) {
 		FROM users;
 	`
 
-	rows, err := configs.DB.QueryContext(c, query)
+	rows, err := u.db.QueryContext(c, query)
 	if err != nil {
 		return []models.User{}, configs.NewError(configs.ErrInternalServer, err)
 	}
@@ -145,7 +150,7 @@ func (u *userRepository) GetByEmail(c context.Context, email string) (models.Use
 	var user models.User
 	var addrID sql.NullString
 
-	err := configs.DB.QueryRowContext(c, query, email).Scan(
+	err := u.db.QueryRowContext(c, query, email).Scan(
 		&user.ID,
 		&user.RoleID,
 		&addrID,
@@ -178,7 +183,7 @@ func (u *userRepository) GetUsersRoles(c context.Context) ([]models.Role, error)
 		FROM roles;
 	`
 
-	rows, err := configs.DB.QueryContext(c, query)
+	rows, err := u.db.QueryContext(c, query)
 	if err != nil {
 		return []models.Role{}, configs.NewError(configs.ErrInternalServer, err)
 	}
