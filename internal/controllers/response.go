@@ -58,3 +58,8 @@ type userResponse3 struct {
 	Success bool   `json:"success"`
 	Data    string `json:"data"`
 }
+
+type roleResponse1 struct {
+	Success bool        `json:"success"`
+	Data    models.Role `json:"data"`
+}

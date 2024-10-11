@@ -41,6 +41,13 @@ definitions:
       success:
         type: boolean
     type: object
+  controllers.roleResponse1:
+    properties:
+      data:
+        $ref: '#/definitions/models.Role'
+      success:
+        type: boolean
+    type: object
   controllers.userResponse1:
     properties:
       data:
@@ -63,6 +70,13 @@ definitions:
         type: string
       success:
         type: boolean
+    type: object
+  models.Role:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
     type: object
   models.User:
     properties:
@@ -90,6 +104,34 @@ definitions:
 info:
   contact: {}
 paths:
+  /roles/:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.roleResponse1'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get all roles
+      tags:
+      - Roles
   /users/:
     get:
       consumes:
