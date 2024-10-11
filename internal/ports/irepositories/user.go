@@ -11,5 +11,4 @@ type IUserRepository interface {
 	List(context.Context) ([]models.User, error)
 	GetByID(context.Context, string) (models.User, error)
 	GetByEmail(context.Context, string) (models.User, error)
-	GetUsersRoles(context.Context) ([]models.Role, error)
 }

@@ -4,22 +4,9 @@ CREATE TABLE IF NOT EXISTS roles(
     CONSTRAINT pk_roles_id PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS addresses(
-    id VARCHAR(36),
-    zip_code VARCHAR(30),
-    state VARCHAR(50),
-    city VARCHAR(50),
-    neighborhood VARCHAR(50),
-    street VARCHAR(50),
-    number VARCHAR(10),
-    complement VARCHAR(50),
-    CONSTRAINT pk_addresses_id PRIMARY KEY(id)
-);
-
 CREATE TABLE IF NOT EXISTS users(
     id VARCHAR(36),
     role_id VARCHAR(36),
-    address_id VARCHAR(36),
     email VARCHAR(50),
     password VARCHAR(150),
     name VARCHAR(100),
@@ -29,6 +16,19 @@ CREATE TABLE IF NOT EXISTS users(
     status BOOLEAN,
     created_at DATE,
     CONSTRAINT pk_users_id PRIMARY KEY (id),
-    CONSTRAINT fk_users_role_id FOREIGN KEY (role_id) REFERENCES roles(id),
-    CONSTRAINT fk_users_addr_id FOREIGN KEY (address_id) REFERENCES addresses(id)
+    CONSTRAINT fk_users_role_id FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE IF NOT EXISTS addresses(
+    id VARCHAR(36),
+    user_id VARCHAR(36),
+    zip_code VARCHAR(30),
+    state VARCHAR(50),
+    city VARCHAR(50),
+    neighborhood VARCHAR(50),
+    street VARCHAR(50),
+    number VARCHAR(10),
+    complement VARCHAR(50),
+    CONSTRAINT pk_addresses_id PRIMARY KEY(id),
+    CONSTRAINT fk_addresses_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 );

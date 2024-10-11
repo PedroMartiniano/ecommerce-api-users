@@ -18,6 +18,17 @@ func NewUserController(userService ps.IUserService) *userController {
 	}
 }
 
+// @BasePath /users
+// @Summary Create a new user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body createUserRequest true "Request Body"
+// @Success 201 {object} userResponse1
+// @Failure 401 {object} errorResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /users/ [post]
 func (u *userController) CreateHandler(c *gin.Context) {
 	var request createUserRequest
 
@@ -46,6 +57,17 @@ func (u *userController) CreateHandler(c *gin.Context) {
 	sendSuccess(c, http.StatusCreated, newUser)
 }
 
+// @BasePath /users
+// @Summary Get an user by ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path string true "The user ID"
+// @Success 200 {object} userResponse1
+// @Failure 401 {object} errorResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /users/{id} [get]
 func (u *userController) GetByIDHandler(c *gin.Context) {
 	id := c.Param("id")
 
@@ -64,6 +86,17 @@ func (u *userController) GetByIDHandler(c *gin.Context) {
 	sendSuccess(c, http.StatusOK, user)
 }
 
+// @BasePath /users
+// @Summary Get all users
+// @Security BearerAuth
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {object} userResponse2
+// @Failure 401 {object} errorResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /users/ [get]
 func (u *userController) ListHandler(c *gin.Context) {
 	users, err := u.userService.ListExecute(c.Request.Context())
 	if err != nil {
@@ -75,6 +108,17 @@ func (u *userController) ListHandler(c *gin.Context) {
 	sendSuccess(c, http.StatusOK, users)
 }
 
+// @BasePath /users
+// @Summary Authenticate an user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body authUserRequest true "Request Body"
+// @Success 200 {object} userResponse3
+// @Failure 401 {object} errorResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /users/login [post]
 func (u *userController) AuthUserHandler(c *gin.Context) {
 	var request authUserRequest
 
@@ -104,6 +148,17 @@ func (u *userController) AuthUserHandler(c *gin.Context) {
 	sendSuccess(c, http.StatusOK, token)
 }
 
+// @BasePath /users
+// @Summary Get user by token
+// @Security BearerAuth
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Success 200 {object} userResponse1
+// @Failure 401 {object} errorResponse
+// @Failure 400 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Router /users/me [get]
 func (u *userController) GetMeHandler(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {

@@ -13,7 +13,7 @@ func userRoutes(router *gin.RouterGroup) {
 	userController := controllers.NewUserController(userService)
 
 	router.POST("/", userController.CreateHandler)
-	router.GET("/", userController.ListHandler)
+	router.GET("/", middlewares.VerifyJWT, userController.ListHandler)
 	router.GET("/:id", userController.GetByIDHandler)
 	router.GET("/me", middlewares.VerifyJWT, userController.GetMeHandler)
 	router.POST("/login", userController.AuthUserHandler)

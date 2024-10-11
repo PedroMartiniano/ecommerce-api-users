@@ -5,7 +5,6 @@ import "time"
 type User struct {
 	ID        string    `json:"id"`
 	RoleID    string    `json:"role_id"`
-	AddrID    string    `json:"address_id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
@@ -23,6 +22,7 @@ type Role struct {
 
 type Address struct {
 	ID           string `json:"id"`
+	UserID       string `json:"user_id"`
 	ZipCode      string `json:"zip_code"`
 	State        string `json:"state"`
 	City         string `json:"city"`
