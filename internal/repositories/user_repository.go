@@ -61,7 +61,7 @@ func (u *userRepository) Create(c context.Context, user models.User) (models.Use
 
 func (u *userRepository) GetByID(c context.Context, userID string) (models.User, error) {
 	query := `
-		SELECT id, role_id email, password, name, phone, cpf, birth_date, status, created_at
+		SELECT id, role_id, email, name, phone, cpf, birth_date, status, created_at
 		FROM users
 		WHERE id = $1;
 	`
@@ -72,7 +72,6 @@ func (u *userRepository) GetByID(c context.Context, userID string) (models.User,
 		&user.ID,
 		&user.RoleID,
 		&user.Email,
-		&user.Password,
 		&user.Name,
 		&user.Phone,
 		&user.CPF,
@@ -92,7 +91,7 @@ func (u *userRepository) GetByID(c context.Context, userID string) (models.User,
 
 func (u *userRepository) List(c context.Context) ([]models.User, error) {
 	query := `
-		SELECT id, role_id, email, password, name, phone, cpf, birth_date, status, created_at
+		SELECT id, role_id, email, name, phone, cpf, birth_date, status, created_at
 		FROM users;
 	`
 
@@ -111,7 +110,6 @@ func (u *userRepository) List(c context.Context) ([]models.User, error) {
 			&user.ID,
 			&user.RoleID,
 			&user.Email,
-			&user.Password,
 			&user.Name,
 			&user.Phone,
 			&user.CPF,
