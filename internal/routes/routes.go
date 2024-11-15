@@ -10,11 +10,15 @@ import (
 
 func InitRoutes(server *gin.Engine) {
 	configs.SwaggerConfigure(docs.SwaggerInfo)
+
 	userRouter := server.Group("/users")
 	userRoutes(userRouter)
 
 	roleRouter := server.Group("/roles")
 	roleRoutes(roleRouter)
+
+	addressRouter := server.Group("/addresses")
+	AddressRoutes(addressRouter)
 
 	server.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

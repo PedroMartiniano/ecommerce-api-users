@@ -25,6 +25,9 @@ func httpError(err error) (code int, message string) {
 		case configs.ErrBadRequest:
 			code = http.StatusBadRequest
 		}
+	} else {
+		code = http.StatusInternalServerError
+		message = configs.ErrInternalServer.Error()
 	}
 
 	return
@@ -63,3 +66,14 @@ type roleResponse1 struct {
 	Success bool        `json:"success"`
 	Data    models.Role `json:"data"`
 }
+
+type addressResponse1 struct {
+	Success bool        `json:"success"`
+	Data    models.Address `json:"data"`
+}
+
+type addressResponse2 struct {
+	Success bool           `json:"success"`
+	Data    []models.Address `json:"data"`
+}
+

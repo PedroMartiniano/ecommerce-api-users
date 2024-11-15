@@ -16,3 +16,13 @@ type authUserRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
+
+type CreateAddressRequest struct {
+	ZipCode      string `json:"zip_code" binding:"required"`
+	State        string `json:"state" binding:"required"`
+	City         string `json:"city" binding:"required"`
+	Neighborhood string `json:"neighborhood" binding:"required"`
+	Street       string `json:"street" binding:"required"`
+	Number       string `json:"number" binding:"required"`
+	Complement   string `json:"complement" binding:"required"`
+}

@@ -1,4 +1,45 @@
 definitions:
+  controllers.CreateAddressRequest:
+    properties:
+      city:
+        type: string
+      complement:
+        type: string
+      neighborhood:
+        type: string
+      number:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      zip_code:
+        type: string
+    required:
+    - city
+    - complement
+    - neighborhood
+    - number
+    - state
+    - street
+    - zip_code
+    type: object
+  controllers.addressResponse1:
+    properties:
+      data:
+        $ref: '#/definitions/models.Address'
+      success:
+        type: boolean
+    type: object
+  controllers.addressResponse2:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      success:
+        type: boolean
+    type: object
   controllers.authUserRequest:
     properties:
       email:
@@ -71,6 +112,27 @@ definitions:
       success:
         type: boolean
     type: object
+  models.Address:
+    properties:
+      city:
+        type: string
+      complement:
+        type: string
+      id:
+        type: string
+      neighborhood:
+        type: string
+      number:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+      user_id:
+        type: string
+      zip_code:
+        type: string
+    type: object
   models.Role:
     properties:
       id:
@@ -104,6 +166,114 @@ definitions:
 info:
   contact: {}
 paths:
+  /addresses/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Request Body
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateAddressRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.addressResponse1'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a new address
+      tags:
+      - Addresses
+  /addresses/{address_id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Address ID
+        in: path
+        name: address_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.addressResponse1'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get address by ID
+      tags:
+      - Addresses
+  /addresses/user/{user_id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.addressResponse2'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get addresses by user ID
+      tags:
+      - Addresses
   /roles/:
     get:
       consumes:
